@@ -1,8 +1,8 @@
-import re
 import numpy as np
 import matplotlib.pyplot as plt
 from sympy import symbols, lambdify
 from scipy.integrate import quad
+import custom_functions_lib
 
 def plot_math_function(expression, variable, start, end, num_points):
     x_vals = np.linspace(start, end, num_points)
@@ -43,26 +43,30 @@ def parse_expression(expression, variable):
     return parsed_expr
 
 def get_custom_functions():
-    custom_functions = {'step': step_function}
+    custom_functions = {'step':     custom_functions_lib.step_function,
+                        'pulse':    custom_functions_lib.pulse_function,
+                        'relu':     custom_functions_lib.relu_function,
+                        'sigmoid':  custom_functions_lib.sigmoid_function,
+                        'sign':     custom_functions_lib.sign_function,
+                        'normal':   custom_functions_lib.normal_function}
     return custom_functions
-
-def step_function(x):
-    return np.where(x < 0, 0, 1)
 
 def on_click(event):
     global x_start
     if event.button == 1 and event.inaxes is not None:
         x_start = event.xdata
-        plt.gca().set_autoscale_on(True)
-        plt.gcf().canvas.mpl_disconnect(event)
+        print(f"x_start = {x_start}")
+        #plt.gca().set_autoscale_on(True)
+        #plt.gcf().canvas.mpl_disconnect(event)
         plt.gcf().canvas.mpl_connect('motion_notify_event', on_drag)
-        plt.gcf().canvas.mpl_connect('button_release_event', on_release)
+        #plt.gcf().canvas.mpl_connect('button_release_event', on_release)
 
 def on_drag(event):
     if event.inaxes is not None:
         x_end = event.xdata
+        print(f"x_end = {x_end}")
         plt.gca().lines[-1].set_xdata([x_start, x_end])
-        plt.gca().figure.canvas.draw()
+        #plt.gca().figure.canvas.draw()
 
 def on_release(event):
     if event.button == 1:
@@ -83,11 +87,11 @@ def on_release(event):
         plt.show()
 
 # Example usage
-input_expression = "Step(x) + sin(x)"
+input_expression = "normal(x)"
 variable_name = "x"
 start_value = -5
 end_value = 5
-num_points = 100
+num_points = 1000
 
 input_expression = input_expression.lower()  # Convert input expression to lowercase
 
