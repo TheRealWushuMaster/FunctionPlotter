@@ -1,6 +1,15 @@
 import numpy as np
 from math import e
 
+def get_custom_functions():
+    custom_functions = {'step':     step_function,
+                        'pulse':    pulse_function,
+                        'relu':     relu_function,
+                        'sigmoid':  sigmoid_function,
+                        'sign':     sign_function,
+                        'normal':   normal_function}
+    return custom_functions
+
 def step_function(x):
     return np.where(x < 0, 0, 1)
 
