@@ -1,6 +1,7 @@
 import tkinter as tk
 
-def create_widgets(window, plot_function, expression):
+def create_widgets(window, plot_function, function_expression,
+                   start_value, end_value, num_points):
     # Create a label and entry field for the function input
     function_frame = tk.Frame(window)
     function_frame.pack()
