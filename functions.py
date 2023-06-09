@@ -3,9 +3,11 @@ import matplotlib.pyplot as plt
 from sympy import symbols, lambdify
 import custom_functions_lib
 from scipy.integrate import trapz
+import define_vars
 
 def plot_math_function(expression, variable, start, end, num_points):
     global x_vals, y_vals
+    
     x_vals = np.linspace(start, end, num_points)
     y_vals = evaluate_expression(expression, variable, x_vals)
 
@@ -84,7 +86,11 @@ def on_release(event):
     x_start = None
     x_end = None
     plt.clf()
-    plot_math_function(input_expression, variable_name, start_value, end_value, num_points)
+    plot_math_function(define_vars.function_text.get(),
+                       define_vars.variable_name.get(),
+                       define_vars.start_value.get(),
+                       define_vars.end_value.get(),
+                       define_vars.num_points.get())
 
 # Example usage
 #input_expression = "sin(2*x)/x"

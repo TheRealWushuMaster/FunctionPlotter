@@ -1,16 +1,16 @@
 import tkinter as tk
 
-function_text = tk.StringVar()
-function_text.set("sin(2*x)/x")
+function_text = None
+variable_name = None
+start_value = None
+end_value = None
+num_points = None
 
-variable_name = tk.StringVar()
-variable_name.set("x")
-
-start_value = tk.IntVar()
-start_value.set(-5)
-
-end_value = tk.IntVar()
-end_value.set(5)
-
-num_points = tk.IntVar()
-num_points.set(1000)
+def create_variables():
+    global function_text, variable_name, start_value, end_value, num_points
+    function_text = tk.StringVar(value = "sin(2*x)/x")
+    variable_name = tk.StringVar(value = "x")
+    start_value = tk.IntVar(value = -5)
+    end_value = tk.IntVar(value = 5)
+    num_points = tk.IntVar(value = 1000)
+    return function_text.get(), variable_name.get(), start_value.get(), end_value.get(), num_points.get()
