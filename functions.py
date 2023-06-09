@@ -4,29 +4,68 @@ from sympy import symbols, lambdify
 import custom_functions_lib
 from scipy.integrate import trapz
 import define_vars
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
+import tkinter as tk
 
-def plot_math_function(expression, variable, start, end, num_points):
+
+def verify_values(canvas):
+    if (define_vars.start_value.get() > define_vars.end_value.get()):
+        temp = define_vars.start_value.get()
+        define_vars.start_value.set(str(define_vars.end_value.get()))
+        define_vars.end_value.set(temp)
+    
+    canvas.delete("all")
+    plot_math_function(define_vars.function_text.get(),
+                       define_vars.variable_name.get(),
+                       define_vars.start_value.get(),
+                       define_vars.end_value.get(),
+                       define_vars.num_points.get(),
+                       canvas)
+
+def plot_math_function(expression, variable, start, end, num_points_per_unit, canvas):
     global x_vals, y_vals
     
+    canvas.delete(tk.ALL)
+    #if (end < start):
+    #    temp = end
+    #    start = end
+    #    end = start
+    num_points = num_points_per_unit * (end - start)
     x_vals = np.linspace(start, end, num_points)
     y_vals = evaluate_expression(expression, variable, x_vals)
 
-    plt.plot(x_vals, y_vals, color="red")
-    plt.xlabel(variable)
-    plt.ylabel('y')
-    plt.title('Plot of ' + expression)
-    plt.grid(visible=True, linestyle="--")
+    fig, ax = plt.subplots()
+    ax.clear()
+    ax.plot(x_vals, y_vals, color="red")
+    ax.set_xlabel(variable)
+    ax.set_ylabel("y")
+    ax.set_title(f"Plot of {expression} between {start} and {end}")
+    ax.grid(visible=True, linestyle="--")
+
+    canvas_plot = FigureCanvasTkAgg(fig, master=canvas)
+    canvas_plot.draw()
+    canvas_widget = canvas_plot.get_tk_widget()
+    canvas_widget.pack(fill=tk.BOTH, expand=True)
+    toolbar = NavigationToolbar2Tk(canvas_plot, canvas, pack_toolbar=False)
+    toolbar.update()
+    toolbar.pack(side=tk.BOTTOM, fill=tk.X)
+    #plt.plot(x_vals, y_vals, color="red")
+    #plt.xlabel(variable)
+    #plt.ylabel('y')
+    #plt.title('Plot of ' + expression)
+    #plt.grid(visible=True, linestyle="--")
 
     # Enable interactive mode for selecting range
-    plt.gca().set(xlim=(start, end), ylim=(np.min(y_vals), np.max(y_vals)))
-    plt.gca().set_ymargin(0.1)
-    plt.gca().set_autoscale_on(True)
+    #plt.gca().set(xlim=(start, end), ylim=(np.min(y_vals), np.max(y_vals)))
+    #plt.gca().set_ymargin(0.1)
+    #plt.gca().set_autoscale_on(True)
 
     # Connect the mouse event to the handler function
-    plt.gcf().canvas.mpl_connect('button_press_event', on_click)
+    #plt.gcf().canvas.mpl_connect('button_press_event', on_click)
     #plt.gca().figure.canvas.draw()
 
-    plt.show()
+    #fig.show()
+    #plt.show()
 
 def evaluate_expression(expression, variable, x_vals):
     x = symbols(variable)

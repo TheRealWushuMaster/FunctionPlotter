@@ -13,7 +13,7 @@ window.title("Math Function Plotter")
 define_vars.create_variables()
 
 # Add widgets
-create_widgets.create_widgets(window, func.plot_math_function)
+create_widgets.create_widgets(window, func.verify_values)
 
 # Start the main event loop
 window.mainloop()

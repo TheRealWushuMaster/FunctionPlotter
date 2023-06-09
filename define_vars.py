@@ -12,5 +12,5 @@ def create_variables():
     variable_name = tk.StringVar(value = "x")
     start_value = tk.IntVar(value = -5)
     end_value = tk.IntVar(value = 5)
-    num_points = tk.IntVar(value = 1000)
+    num_points = tk.IntVar(value = 10)
     return function_text.get(), variable_name.get(), start_value.get(), end_value.get(), num_points.get()
