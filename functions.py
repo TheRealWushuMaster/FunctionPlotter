@@ -111,14 +111,3 @@ def on_release(event):
                        define_vars.start_value.get(),
                        define_vars.end_value.get(),
                        define_vars.num_points.get())
-
-# Example usage
-#input_expression = "sin(2*x)/x"
-#variable_name = "x"
-#start_value = -5
-#end_value = 5
-#num_points = 1000
-
-#input_expression = input_expression.lower()  # Convert input expression to lowercase
-
-#plot_math_function(input_expression, variable_name, start_value, end_value, num_points)
