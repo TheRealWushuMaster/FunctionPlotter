@@ -14,7 +14,7 @@ def verify_values(canvas):
         define_vars.start_value.set(str(define_vars.end_value.get()))
         define_vars.end_value.set(temp)
     
-    canvas.delete("all")
+    #canvas.delete("all")
     plot_math_function(define_vars.function_text.get(),
                        define_vars.variable_name.get(),
                        define_vars.start_value.get(),
@@ -25,17 +25,14 @@ def verify_values(canvas):
 def plot_math_function(expression, variable, start, end, num_points_per_unit, canvas):
     global x_vals, y_vals
     
-    canvas.delete(tk.ALL)
-    #if (end < start):
-    #    temp = end
-    #    start = end
-    #    end = start
+    for widget in canvas.winfo_children():
+        widget.destroy()
+
     num_points = num_points_per_unit * (end - start)
     x_vals = np.linspace(start, end, num_points)
     y_vals = evaluate_expression(expression, variable, x_vals)
 
     fig, ax = plt.subplots()
-    ax.clear()
     ax.plot(x_vals, y_vals, color="red")
     ax.set_xlabel(variable)
     ax.set_ylabel("y")
@@ -46,26 +43,10 @@ def plot_math_function(expression, variable, start, end, num_points_per_unit, ca
     canvas_plot.draw()
     canvas_widget = canvas_plot.get_tk_widget()
     canvas_widget.pack(fill=tk.BOTH, expand=True)
+    
     toolbar = NavigationToolbar2Tk(canvas_plot, canvas, pack_toolbar=False)
     toolbar.update()
     toolbar.pack(side=tk.BOTTOM, fill=tk.X)
-    #plt.plot(x_vals, y_vals, color="red")
-    #plt.xlabel(variable)
-    #plt.ylabel('y')
-    #plt.title('Plot of ' + expression)
-    #plt.grid(visible=True, linestyle="--")
-
-    # Enable interactive mode for selecting range
-    #plt.gca().set(xlim=(start, end), ylim=(np.min(y_vals), np.max(y_vals)))
-    #plt.gca().set_ymargin(0.1)
-    #plt.gca().set_autoscale_on(True)
-
-    # Connect the mouse event to the handler function
-    #plt.gcf().canvas.mpl_connect('button_press_event', on_click)
-    #plt.gca().figure.canvas.draw()
-
-    #fig.show()
-    #plt.show()
 
 def evaluate_expression(expression, variable, x_vals):
     x = symbols(variable)
