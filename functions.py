@@ -15,7 +15,7 @@ def verify_values(canvas):
         define_vars.end_value.set(temp)
     
     #canvas.delete("all")
-    plot_math_function(define_vars.function_text.get(),
+    plot_math_function(define_vars.function_text.get().lower(),
                        define_vars.variable_name.get(),
                        define_vars.start_value.get(),
                        define_vars.end_value.get(),
