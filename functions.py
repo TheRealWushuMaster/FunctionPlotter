@@ -14,7 +14,6 @@ def verify_values(canvas):
         define_vars.start_value.set(str(define_vars.end_value.get()))
         define_vars.end_value.set(temp)
     
-    #canvas.delete("all")
     plot_math_function(define_vars.function_text.get().lower(),
                        define_vars.variable_name.get(),
                        define_vars.start_value.get(),
@@ -36,7 +35,7 @@ def plot_math_function(expression, variable, start, end, num_points_per_unit, ca
     ax.plot(x_vals, y_vals, color="red")
     ax.set_xlabel(variable)
     ax.set_ylabel("y")
-    ax.set_title(f"Plot of {expression} between {start} and {end}")
+    ax.set_title(f"$\it y = {expression}$ with $\it x$ in [{start}, {end}]")
     ax.grid(visible=True, linestyle="--")
 
     canvas_plot = FigureCanvasTkAgg(fig, master=canvas)
