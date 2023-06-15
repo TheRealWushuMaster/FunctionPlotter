@@ -25,29 +25,38 @@ class App(tk.Tk):
 
 class Controls(ttk.Frame):
     def __init__(self, parent):
-        super().__init__(parent)
+        super().__init__(master=parent)
         
         # Create control widgets
-        frame_function = self.frame()
-        function_label = self.label(frame_function, "Function: y = ")
-        function_entry = self.text_input(parent=frame_function, text_var=function_text, width=50)
+        #frame_function = self.frame()
+        function_label = self.label("Function: y = ")
+        function_entry = self.text_input(text_var=function_text, width=50)
         
         # Place widgets
-        function_label.pack(side=tk.LEFT, padx=10, pady=10)
-        function_entry.pack(side=tk.LEFT, padx=10, pady=10)
+        #function_label.pack(side=tk.LEFT, padx=0, pady=DEF_PAD)
+        #function_entry.pack(side=tk.LEFT, padx=0, pady=DEF_PAD)
+        self.create_function_text()
         
         self.place(x=0, y=0, relwidth=1, height=100)
-        
-    def frame(parent):
-        frame = ttk.Frame(parent)
+
+    def create_function_text(self):
+        #frame = self.frame()
+        #ttk.Label(text="Test").pack()
+        function_label = self.label("Function: y = ")
+        function_entry = self.text_input(function_text, width=FUNCTION_ENTRY_WIDTH)
+        function_label.pack()
+        function_entry.pack()
+
+    def frame(self):
+        frame = ttk.Frame(master=self)
         return frame
     
-    def text_input(parent, text_var = None, width=20):
-        text_input = ttk.Entry(parent, textvariable=text_var, width=width)
+    def text_input(self, text_var = None, width=20):
+        text_input = ttk.Entry(self, textvariable=text_var, width=width)
         return text_input
     
-    def label(parent, text):
-        label = ttk.Label(parent, text=text)
+    def label(self, text):
+        label = ttk.Label(self, text=text)
         return label
 
 App()
