@@ -1,20 +1,39 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from sympy import symbols, lambdify
-import custom_functions_lib
+import custom_functions
 from scipy.integrate import trapz
 import define_vars
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 import tkinter as tk
+from settings import *
 
 
 def verify_values(canvas):
-    if (define_vars.start_value.get() > define_vars.end_value.get()):
-        temp = define_vars.start_value.get()
-        define_vars.start_value.set(str(define_vars.end_value.get()))
-        define_vars.end_value.set(temp)
+    # Check if the start and end values are correct
+    try:
+        if (define_vars.start_value.get() > define_vars.end_value.get()):
+            temp = define_vars.start_value.get()
+            define_vars.start_value.set(str(define_vars.end_value.get()))
+            define_vars.end_value.set(temp)
+    except:
+        define_vars.start_value.set(DEF_START_VALUE)
+        define_vars.end_value.set(DEF_END_VALUE)
+
+    # Check if the expression entered contains the variable
+    function = define_vars.function_text.get().lower()
+    if not function.__contains__(define_vars.variable_name.get()):
+        # If the variable is not present, add a dummy
+        function += f"+0*{define_vars.variable_name.get()}"
+
+    # Check if the resolution is a positive number
+    try:
+        if not define_vars.num_points.get() > 0:
+            define_vars.num_points.set(10)
+    except:
+        define_vars.num_points.set(10)
     
-    plot_math_function(define_vars.function_text.get().lower(),
+    plot_math_function(function,
                        define_vars.variable_name.get(),
                        define_vars.start_value.get(),
                        define_vars.end_value.get(),
@@ -27,15 +46,15 @@ def plot_math_function(expression, variable, start, end, num_points_per_unit, ca
     for widget in canvas.winfo_children():
         widget.destroy()
 
-    num_points = num_points_per_unit * (end - start)
-    x_vals = np.linspace(start, end, num_points)
+    points = num_points_per_unit * (end - start)
+    x_vals = np.linspace(start, end, points)
     y_vals = evaluate_expression(expression, variable, x_vals)
 
     fig, ax = plt.subplots()
     ax.plot(x_vals, y_vals, color="red")
     ax.set_xlabel(variable)
     ax.set_ylabel("y")
-    ax.set_title(f"$\it y = {expression}$ with $\it x$ in [{start}, {end}]")
+    ax.set_title(f"$\it y = {define_vars.function_text.get()}$ with $\it x$ in [{start}, {end}]")
     ax.grid(visible=True, linestyle="--")
 
     canvas_plot = FigureCanvasTkAgg(fig, master=canvas)
@@ -50,7 +69,7 @@ def plot_math_function(expression, variable, start, end, num_points_per_unit, ca
 def evaluate_expression(expression, variable, x_vals):
     x = symbols(variable)
     expr = parse_expression(expression, variable)
-    f = lambdify(x, expr, modules=['numpy', custom_functions_lib.get_custom_functions()])
+    f = lambdify(x, expr, modules=['numpy', custom_functions.get_custom_functions()])
     y = f(x_vals)
     return y
 
