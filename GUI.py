@@ -38,7 +38,7 @@ class Controls(ttk.Frame):
         canvas = tk.Canvas(parent, bg="white")
         self.pack()
         #self.place(x=0, y=0, relwidth=1, height=130)
-        canvas.pack(fill="both")
+        canvas.pack(expand=True, fill="both")
 
     def create_function_frame(self):
         function_text_frame = ttk.Frame(master=self)
