@@ -23,7 +23,7 @@ The user can use `pi` and `e` as well.
 Using the toolbar, the user can zoom in/out and pan.
 
 ## Customization
-Modify the contents of `setings.py` to change default values.
+Modify the contents of `settings.py` to change default values.
 
 ## Future features
 1. Calculate the integral of the function by:
