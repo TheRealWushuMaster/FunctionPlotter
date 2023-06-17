@@ -1,6 +1,8 @@
 # 📈 Function Plotter 📉
+
 This program will make a plot of an arbitrary input function.
 
+## Instructions
 The steps for using it are:
 1. Input an expression in the function entry (should contain the variable at least once, default value `x`)
 2. Set the limits of the variable in the `Start` and `End` entries
