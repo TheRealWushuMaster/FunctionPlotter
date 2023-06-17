@@ -2,7 +2,7 @@
 WINDOW_SIZE = (700, 700)
 MINIMUM_SIZE = (400, 400)
 
-# DEFAULT FUNCTION VALUES
+# Default function values
 DEF_FUNCTION = "sin(x)/x"
 DEF_VARIABLE = "x"
 DEF_START_VALUE = -10

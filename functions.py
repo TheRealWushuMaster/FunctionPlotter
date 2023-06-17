@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import sympy as sp
 from sympy import symbols, lambdify
 import custom_functions
 from scipy.integrate import trapz
@@ -7,9 +8,19 @@ import define_vars
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 import tkinter as tk
 from settings import *
+from sympy.parsing.sympy_parser import parse_expr, standard_transformations, implicit_multiplication_application
 
-
-def verify_values(canvas):
+def verify_values(event=None, canvas=None, control=None):
+    # Check if the expression entered contains the variable
+    function = define_vars.function_text.get().lower()
+    if not function.__contains__(define_vars.variable_name.get()):
+        # If the variable is not present, add a dummy
+        function += f"+0*{define_vars.variable_name.get()}"
+    
+    # Check if the input expression is valid
+    if not validate_expression(function, define_vars.variable_name.get()):
+        return
+    
     # Check if the start and end values are correct
     try:
         if (define_vars.start_value.get() > define_vars.end_value.get()):
@@ -20,18 +31,12 @@ def verify_values(canvas):
         define_vars.start_value.set(DEF_START_VALUE)
         define_vars.end_value.set(DEF_END_VALUE)
 
-    # Check if the expression entered contains the variable
-    function = define_vars.function_text.get().lower()
-    if not function.__contains__(define_vars.variable_name.get()):
-        # If the variable is not present, add a dummy
-        function += f"+0*{define_vars.variable_name.get()}"
-
     # Check if the resolution is a positive number
     try:
         if not define_vars.num_points.get() > 0:
-            define_vars.num_points.set(10)
+            define_vars.num_points.set(DEF_PPU)
     except:
-        define_vars.num_points.set(10)
+        define_vars.num_points.set(DEF_PPU)
     
     plot_math_function(function,
                        define_vars.variable_name.get(),
@@ -39,6 +44,17 @@ def verify_values(canvas):
                        define_vars.end_value.get(),
                        define_vars.num_points.get(),
                        canvas)
+    if control:
+        control.after(10, lambda: control.focus_set())
+
+def validate_expression(expression, variable):
+    try:
+        x = sp.symbols(variable)
+        sp.sympify(expression, evaluate=False)  # Parsing and validating the expression
+        return True
+    except Exception as e:
+        tk.messagebox.showerror(title="Error found", message=f"Expression is invalid.\n{str(e)}")
+        return False
 
 def plot_math_function(expression, variable, start, end, num_points_per_unit, canvas):
     global x_vals, y_vals
@@ -58,7 +74,7 @@ def plot_math_function(expression, variable, start, end, num_points_per_unit, ca
     ax.grid(visible=True, linestyle="--")
 
     canvas_plot = FigureCanvasTkAgg(fig, master=canvas)
-    canvas_plot.draw()
+    canvas_plot.draw_idle()
     canvas_widget = canvas_plot.get_tk_widget()
     canvas_widget.pack(fill=tk.BOTH, expand=True)
     
@@ -67,10 +83,14 @@ def plot_math_function(expression, variable, start, end, num_points_per_unit, ca
     toolbar.pack(side=tk.BOTTOM, fill=tk.X)
 
 def evaluate_expression(expression, variable, x_vals):
+    error = None
     x = symbols(variable)
-    expr = parse_expression(expression, variable)
-    f = lambdify(x, expr, modules=['numpy', custom_functions.get_custom_functions()])
-    y = f(x_vals)
+    try:
+        expr = parse_expression(expression, variable)
+        f = lambdify(x, expr, modules=['numpy', custom_functions.get_custom_functions()])
+        y = f(x_vals)
+    except Exception:
+        tk.messagebox.showerror(title="Error", message=str(Exception))
     return y
 
 def parse_expression(expression, variable):
